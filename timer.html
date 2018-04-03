@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="icon.jpg">
+    <title>Fight Academy Timer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="mycss.css">
+    <script type="text/javascript" src="myscript.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse" >
+       <div class="col-sm-2">
+            <img class="icon" draggable="false" src="icon.jpg">
+       </div>
+        <div class="col-sm-6">
+            <h1 class="myheader" >Fight Academy Boxing Timer</h1>
+        </div>
+
+    </nav>
+    <div data-ng-app="testing" data-ng-init="rounds=12;prepare=10;round=180;warning=10;rest=60">
+    <div id="mySidenav" class="sidenav">
+        <a href="#" draggable="false" id="about" style="cursor:context-menu;" onclick="SetRounds();">Γύροι: <div id="rounds">12</div></a>
+        <a href="#" draggable="false" id="blog" style="cursor:context-menu;" onclick="SetPreparation()">Προετοιμασία:<div class="settings">00:10</div></a>
+        <a href="#" draggable="false" id="projects" style="cursor:context-menu;" onclick="SetRound()">Γύρος:<div class="settings">03:00</div></a>
+        <a href="#" draggable="false" id="contact" style="cursor:context-menu;" onclick="SetWarning()">Προσοχή:<div class="settings">00:10</div></a>
+        <a href="#" draggable="false" id="last" style="cursor:context-menu;" onclick="SetRest()">Διάλειμμα:<div class="settings">01:00</div></a>
+      </div>
+    <div class="container">
+        <div class="row">
+                <div class="circle2"> <div class="circle">1</div></div>
+        </div>
+        <div class="row tablo">
+            <div class="dynamic-content"></div>
+           
+            <div class="timer">47:10</div>
+            <div class="dynamic-content2"></div>
+        </div>
+    </div>
+    <div class="myfooter">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="col-sm-6">
+                <h2 style="float:left;">Συνολικός Χρόνος:</h2> <div id="time">47:10</div>
+            </div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4">
+                <button class="button button--winona button--border-thick button--round-s button--text-upper button--size-s button--text-thick" id="Ebutton" onclick="openNav()" data-text="ΡΥΘΜΙΣΗ"><span>ΡΥΘΜΙΣΗ</span></button>
+                <button id="start" class="button button--winona2 button--border-thick button--round-s button--text-upper button--size-s button--text-thick" onclick="start()" data-text="ΑΡΧΗ"><span>ΑΡΧΗ</span></button>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            
+        </div>
+    </div>
+</body>
+</html>
