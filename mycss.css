@@ -397,3 +397,90 @@ div{
 	top:420px;
 	visibility: hidden;
 }
+
+.overPic{
+	width:15%;
+	position:absolute;
+	border-radius:60%;
+	left:500px;
+	bottom:-125px;
+}
+
+.overText{
+	font-size:200px;
+}
+
+.sign{
+	width:13%;
+	position:absolute;
+	left:1020px;
+	bottom:-145px;
+}
+
+
+
+@media only screen and (max-width: 1400px) {
+	.overText{
+		position: relative;
+		top:-50px;
+	}
+
+	.overPic{
+		width: 13%;
+		left:510px;
+		top:170px;
+	}
+	.sign{
+		bottom:-30px;
+	}
+	.button--winona2 > span {
+		padding:0;
+	}
+
+	.button--winona > span {
+		padding:0;
+	}
+    .myfooter{
+		height: 95px;
+	}
+	#buttons{
+		display: inline;
+		top:-30px;
+	}
+	.circle2{
+		position:absolute;
+		top:70px;
+	}
+	#about{
+		z-index: 100;
+	}
+	#blog{
+		z-index: 100;
+	}
+	#projects{
+		z-index: 100;
+	}
+	#contact{
+		z-index: 100;
+	}
+	#last{
+		z-index: 100;
+	}
+	.arrowup{
+		top:35px;
+	}
+	.timer{
+		font-size:250px;
+		top:50px;
+	}
+	#pause{
+		top: 280px;
+		left: 620px;
+	}
+	.tablo{
+		height:375px;
+	}
+	.button{
+		padding:0;
+	}
+}

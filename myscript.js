@@ -1,4 +1,5 @@
 var rounds=12,preperation=10,round=180,warning=10,rest=60;
+var intervalId=0;
 var Timer=0;
 var paused=0;
 var audioStart=new Audio('start_ring.mp3');
@@ -20,7 +21,6 @@ function openNav() {
         $(".dynamic-content2").html("");
         $(".circle").html("1");
         $(".circle2").css({'background-color':"white"});
-       // console.log(rounds*round+preperation+(rounds-1)*rest);
         //call an angular expression again
         $("#start").prop('disabled',false);
     }
@@ -51,11 +51,29 @@ function SetRounds(){
    
     $(".dynamic-content").html("\
     <div class='col-sm-5'></div>\
-    <div class='col-sm-6'><img class='arrowup' draggable='false' onclick='uprounds()' src='up.png'></div>");
+    <div class='col-sm-6'><img class='arrowup' id='rup' draggable='false' onclick='uprounds()' src='up.png'></div>");
     $(".dynamic-content2").html("\
     <div class='col-sm-5'></div>\
-    <div class='col-sm-6'><img class='arrowup' draggable='false' onclick='downrounds()' src='down.png'></div>");
+    <div class='col-sm-6'><img class='arrowup' id='rDown' draggable='false'  onclick='downrounds()' src='down.png'></div>");
+    
+    $("#rDown").mousedown(function(event) {
+        if(event.which==1){ intervalId = setInterval(downrounds, 200);}
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
+
+    $("#rup").mousedown(function(event) {
+        if(event.which==1){intervalId = setInterval(uprounds, 200);}
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
 }
+
+
 
 function SetPreparation(){
 
@@ -87,6 +105,8 @@ function SetPreparation(){
     function(){
         downPreperation(1);
     });
+    
+   button_function(upPreperation,downPreperation);
 }
 
 function SetRound(){
@@ -118,6 +138,7 @@ function SetRound(){
     function(){
         downRound(1);
     });
+    button_function(upRound,downRound);
 }
 //HERE WRITITNGGG
 function SetWarning(){
@@ -149,6 +170,7 @@ function SetWarning(){
     function(){
         downWarning(1);
     });
+    button_function(upWarning,downWarning);
 }
 
 function SetRest(){
@@ -180,13 +202,29 @@ function SetRest(){
     function(){
         downRest(1);
     });
+    button_function(upRest,downRest);
 }
 
 
 //TIME FUNCTIONS HERE________________________________________>
 function uprounds(){//fixe the sum time
     if(rounds==24){
+        rounds=1;
+        $(".timer").html(rounds);
+        $("#rounds").html(rounds);
+        var sumtime=rounds*round+preperation+(rounds-1)*rest;
+        var hours   = Math.floor(sumtime / 3600);
+        var minutes = Math.floor((sumtime - (hours * 3600)) / 60);
+        var seconds = sumtime - (hours * 3600) - (minutes * 60);
 
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        if(hours=="00"){
+            $("#time").html(minutes+":"+seconds);
+        }else{
+            $("#time").html(hours+":"+minutes+":"+seconds);
+        }
     }else{
         rounds=rounds+1;
         $(".timer").html(rounds);
@@ -209,7 +247,22 @@ function uprounds(){//fixe the sum time
 
 function downrounds(){//fixe the sum time
     if(rounds==1){
+        rounds=24;
+        $(".timer").html(rounds);
+        $("#rounds").html(rounds);
+        var sumtime=rounds*round+preperation+(rounds-1)*rest;
+        var hours   = Math.floor(sumtime / 3600);
+        var minutes = Math.floor((sumtime - (hours * 3600)) / 60);
+        var seconds = sumtime - (hours * 3600) - (minutes * 60);
 
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        if(hours=="00"){
+            $("#time").html(minutes+":"+seconds);
+        }else{
+            $("#time").html(hours+":"+minutes+":"+seconds);
+        }
     }else{
         rounds=rounds-1;
         $(".timer").html(rounds);
@@ -235,15 +288,17 @@ function downPreperation (addtime){
     var seconds=preperation-minutes*60;
     if(addtime==60){
         if(minutes==0){
-
+            preperation=59*60+seconds;
+            computeSum(preperation,0);
         }else{
             preperation=preperation-addtime;
             computeSum(preperation,0);
         }
     }else if(addtime==1){
-        if(seconds==0){
-
-        }else{
+        if(seconds==0&&minutes!=0){
+            preperation=preperation-1;
+            computeSum(preperation,0);
+        }else if(preperation!=0){
             preperation=preperation-addtime;
             computeSum(preperation,0);
         }
@@ -255,15 +310,17 @@ function upPreperation (addtime){
     var seconds=preperation-minutes*60;
     if(addtime==60){
         if(minutes==59){
-
+            preperation=seconds;
+            computeSum(preperation,0);
         }else{
             preperation=preperation+addtime;
             computeSum(preperation,0);
         }
     }else if(addtime==1){
-        if(seconds==59){
-
-        }else{
+        if(seconds==59&&minutes!=59){
+            preperation=preperation+1;
+            computeSum(preperation,0);
+        }else if(preperation<60*60-1){
             preperation=preperation+addtime;
             computeSum(preperation,0);
         }
@@ -275,55 +332,63 @@ function downRound (addtime){
     var seconds=round-minutes*60;
     if(addtime==60){
         if(minutes==0){
-
+            round=59*60+seconds;
+            computeSum(round,1);
         }else{
             round=round-addtime;
             computeSum(round,1);
         }
     }else if(addtime==1){
-        if(seconds==0){
-
-        }else{
+        if(seconds==0&&minutes!=0){
+            round=round-1;
+            computeSum(round,1);
+        }else if(round!=0){
             round=round-addtime;
             computeSum(round,1);
         }
     }
 }
 
+ 
 function upRound (addtime){
     var minutes=Math.floor(round/60);
     var seconds=round-minutes*60;
     if(addtime==60){
         if(minutes==59){
-
+            round=seconds;
+            computeSum(round,1);
         }else{
             round=round+addtime;
             computeSum(round,1);
         }
     }else if(addtime==1){
-        if(seconds==59){
-
-        }else{
+        if(seconds==59&&minutes!=59){
+            round=round+1;
+            computeSum(round,1);
+        }else if(round<60*60-1){
             round=round+addtime;
             computeSum(round,1);
         }
     }
 }
+
 //HERE
 function downWarning (addtime){
     var minutes=Math.floor(warning/60);
     var seconds=warning-minutes*60;
     if(addtime==60){
         if(minutes==0){
-
+            warning=59*60+seconds;
+            computeSum(warning,2);
         }else{
             warning=warning-addtime;
             computeSum(warning,2);
         }
     }else if(addtime==1){
-        if(seconds==0){
-
-        }else{
+        if(seconds==0&&minutes!=0){
+            warning=warning-1;
+            computeSum(warning,2);
+        }else if(warning!=0){
             warning=warning-addtime;
             computeSum(warning,2);
         }
@@ -335,35 +400,40 @@ function upWarning (addtime){
     var seconds=warning-minutes*60;
     if(addtime==60){
         if(minutes==59){
-
+            warning=seconds;
+            computeSum(warning,2);
         }else{
             warning=warning+addtime;
             computeSum(warning,2);
         }
     }else if(addtime==1){
-        if(seconds==59){
-
-        }else{
+        if(seconds==59&&minutes!=59){
+            warning=warning+1;
+            computeSum(warning,2);
+        }else if(warning<60*60-1){
             warning=warning+addtime;
             computeSum(warning,2);
         }
     }
 }
 
+
 function downRest (addtime){
     var minutes=Math.floor(rest/60);
     var seconds=rest-minutes*60;
     if(addtime==60){
         if(minutes==0){
-
+            rest=59*60+seconds;
+            computeSum(rest,3);
         }else{
             rest=rest-addtime;
             computeSum(rest,3);
         }
     }else if(addtime==1){
-        if(seconds==0){
-
-        }else{
+        if(seconds==0&&minutes!=0){
+            rest=rest-1;
+            computeSum(rest,3);
+        }else if(rest!=0){
             rest=rest-addtime;
             computeSum(rest,3);
         }
@@ -375,21 +445,22 @@ function upRest (addtime){
     var seconds=rest-minutes*60;
     if(addtime==60){
         if(minutes==59){
-
+            rest=seconds;
+            computeSum(rest,3);
         }else{
             rest=rest+addtime;
             computeSum(rest,3);
         }
     }else if(addtime==1){
-        if(seconds==59){
-
-        }else{
+        if(seconds==59&&minutes!=59){
+            rest=rest+1;
+            computeSum(rest,3);
+        }else if(rest<60*60-1){
             rest=rest+addtime;
             computeSum(rest,3);
         }
     }
 }
-
 
 function computeSum(time,secondary)
 {//Here fix time Working Time mode
@@ -418,16 +489,16 @@ function computeSum(time,secondary)
 function add_arrows(){
     $(".dynamic-content").html("\
     <div  class='col-sm-3'></div>\
-    <div  class='col-sm-1'><img class='arrowup' draggable='false' src='up.png'></div>\
+    <div  class='col-sm-1'><img id='1up' class='arrowup' draggable='false' src='up.png'></div>\
     <div  class='col-sm-3'></div>\
-    <div  class='col-sm-1'><img class='arrowup' draggable='false' src='up.png'></div>\
+    <div  class='col-sm-1'><img id='2up' class='arrowup' draggable='false' src='up.png'></div>\
     ");
 
     $(".dynamic-content2").html("\
     <div  class='col-sm-3'></div>\
-    <div  class='col-sm-1'><img class='arrowup' draggable='false' src='down.png'></div>\
+    <div  class='col-sm-1'><img id='1down' class='arrowup' draggable='false' src='down.png'></div>\
     <div  class='col-sm-3'></div>\
-    <div  class='col-sm-1'><img class='arrowup' draggable='false' src='down.png'></div>\
+    <div  class='col-sm-1'><img id='2down' class='arrowup' draggable='false' src='down.png'></div>\
     ");
 }
 
@@ -495,9 +566,11 @@ function start(){
             Timer=setInterval(function(){
                     if(paused!=1){
                         if(test==warning){//fix here warning
-                            $(".tablo").css('background-color','#F60');
-                            $(".circle2").css({'background-color':'#F60'});
-                            audioWarning.play();
+                            if(warning!=0){
+                                $(".tablo").css('background-color','#F60');
+                                $(".circle2").css({'background-color':'#F60'});
+                                audioWarning.play();
+                            }
                         }
                         test=round-i;
                         
@@ -510,10 +583,7 @@ function start(){
                         if(test<=0){
                             clearInterval(Timer);
                             i=0;
-                            console.log(roundCounter);
                             if(roundCounter==1) {//Here the hole match ends fix the button for sure and put an over logo :) 
-                                
-                                console.log("here");
                                 end_session();//here will need some further fix for sure
                                 return;
                             }
@@ -605,11 +675,47 @@ function end_session(){
     $(".tablo").css('background-color','#F00');
     $(".timer").css('color',"white");
     $(".circle2").css({'background-color':"#F00"});
-    $(".timer").html("<div style='font-size:200px'>Game Over</div>\
-    <img style='width:15%;position:absolute;border-radius:60%;left:500px;bottom:-125px;' src='game_over.jpg'>\
-    <img style='width:13%;position:absolute;left:1020px;bottom:-145px;' src='signature.png'>\
+    $(".timer").html("<div class='overText'>Game Over</div>\
+    <img class='overPic' src='game_over.jpg'>\
+    <img class='sign' src='signature.png'>\
     ");
     document.getElementsByClassName("tablo")[0].removeEventListener("mouseover",test1);
     document.getElementsByClassName("tablo")[0].removeEventListener("mouseout",test2);
     document.getElementsByClassName("tablo")[0].removeEventListener("click", playnpause);
+}
+
+
+function button_function(fname1,fname2){
+
+    $("#1up").mousedown(function(event) {
+        if(event.which==1){ intervalId = setInterval(function() { fname1(60); }, 200);} 
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
+
+    $("#2up").mousedown(function(event) {
+        if(event.which==1){intervalId = setInterval(function() { fname1(1); }, 200);}
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
+
+    $("#1down").mousedown(function(event) {
+        if(event.which==1){  intervalId = setInterval(function() { fname2(60); }, 200);}
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
+
+    $("#2down").mousedown(function(event) {
+        if(event.which==1){   intervalId = setInterval(function() { fname2(1); }, 200); }
+    }).mouseup(function() {
+        clearInterval(intervalId);
+    }).mouseout(function() {
+        clearInterval(intervalId);
+    });
 }
